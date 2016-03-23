@@ -15,11 +15,11 @@ It's a Ruby script that lets you create and edit [TaskPaper](http://www.taskpape
 
 To install Less on Mac OS X, the simplest way is:
 
-1. Install [Homebrew](http://brew.sh): `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"` in Terminal.
+1. Install [Homebrew](http://brew.sh) (instructions on that page).
 2. Use Homebrew to install [npm](https://nodejs.org/): `brew install npm` in Terminal.
 3. Use npm to install Less: `npm install -g less` in Terminal.
 	
-Now you can use Less via `lessc` in Terminal.
+Now you can use Less via `lessc` in Terminal. If you don't install Less, this script will use a default theme instead.
 
 
 ## What does it do?
