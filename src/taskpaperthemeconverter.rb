@@ -97,6 +97,15 @@ class TaskPaperThemeConverter
 				end
 			end
 			
+			# Quote numeric attribute-values, so it doesn't mess up CSS rendering
+			num_attr_val_regexp = /\[[^=\]]+=(\d+)\]/i
+			num_attr_matches = raw_content.to_enum(:scan, num_attr_val_regexp).map { Regexp.last_match }
+			num_attr_matches.reverse.each do |match|
+				num_val = match[1]
+				range = Range.new(match.begin(1), match.end(1), true)
+				raw_content[range] = "\"#{num_val}\""
+			end
+			
 			# Convert with Less
 			css_content = less_convert(raw_content)			
 		else

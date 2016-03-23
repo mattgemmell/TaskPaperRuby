@@ -42,7 +42,7 @@ class TaskPaperItem
 				
 				proj_id = (@type == TYPE_PROJECT) ? "id='#{id_attr}' " : ""
 				
-				output += "<li #{proj_id}class='#{type_name.downcase}' data-type='#{type_name.downcase}'#{tag_data_attrs}>"
+				output += "<li #{proj_id}class='#{type_name.downcase}' data-type='#{type_name.downcase}'#{tag_data_attrs} depth='#{effective_level + 1}'>"
 				
 				posn = 0
 			
