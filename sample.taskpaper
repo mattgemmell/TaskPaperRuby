@@ -1,0 +1,27 @@
+One project:
+	- Here's a task
+	- Here's one with a link: http://twitter.com/mattgemmell
+	- An example task goes here @my-tag @your-tag
+	- Call the person about the thing @today
+	Sub-project:
+		- This is an important thing @flag
+			This is a note @my-tag
+	- A thing I should do @due(2016-03-29 2pm)
+Another project:
+	- Release some source code @done
+	- Email matt@mattgemmell.com or visit his site at mattgemmell.com
+	- Work on that thing @context(work) @priority(high)
+	- Get some exercise @context(outside) @flag
+Priorities:
+	- This is very important @priority(high)
+	- So is this @priority(1)
+	- This is of moderate importance @priority(normal)
+	- This isn't very important at all @priority(low)
+	- Nor is this @priority(5)
+[Searches]:
+	- Next Actions @search(project *//((not @done\) and (not @search\)\)[0])
+	- Due Today @search(not @done and (@today or @due <=[d] today +1d or @due <=[d] today\))
+	- Due within 7 days @search(not @done and (@today or @due <=[d] today +7d or @due <=[d] today\))
+	- Priority: High @search(not @done and (@priority = [i]high or @priority = 1\))
+	- Flagged @search(not @done and @flag)
+	- Context: Work @search(not @done and @context = [i]work)
