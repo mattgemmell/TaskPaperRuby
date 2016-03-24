@@ -202,10 +202,12 @@ END
 								"invisibles-color",
 								"drop-indicator-color",
 								"guide-line-color",
+								"guide-line-width",
 								"message-color",
 								"item-indent", # handled above
 								"folded-items-label",
 								"filtered-items-label",
+								"item-handle-size",
 								"handle-color", # handled above
 								"selection-background-color", # handled above
 								"text-underline-color",

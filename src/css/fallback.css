@@ -5,8 +5,6 @@ body {
   font-family: "Source Sans Pro", Helvetica, Verdana, sans-serif;
   background-color: white;
   line-height: 1.1;
-  item-handle-size: 6;
-  guide-line-width: 1;
 }
 li[data-type="note"] {
   font-style: italic;
