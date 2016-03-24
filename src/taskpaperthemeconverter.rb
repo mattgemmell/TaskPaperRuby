@@ -189,6 +189,9 @@ END
 			end
 			raw_content.gsub!("$ITEM_INDENT", item_indent) # in tweaks CSS file
 			
+			# Line height
+			raw_content.gsub!("line-height-multiple", "line-height")
+			
 			# Strip inapplicable/incompatible selectors
 			strip_selectors = [
 								"search-item-prefix",
