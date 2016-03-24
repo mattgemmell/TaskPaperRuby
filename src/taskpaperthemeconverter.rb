@@ -79,7 +79,7 @@ class TaskPaperThemeConverter
 			# and reflect default link styling in TaskPaper
 			task_color_override = <<END
 
-item[data-type=task] {
+item[data-type=task], item[data-type=note] {
 	color: @text-color;
 }
 
