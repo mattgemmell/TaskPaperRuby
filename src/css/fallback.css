@@ -4,7 +4,7 @@ body {
   font-size: 16;
   font-family: "Source Sans Pro", Helvetica, Verdana, sans-serif;
   background-color: white;
-  line-height-multiple: 1.1;
+  line-height: 1.1;
   item-handle-size: 6;
   guide-line-width: 1;
 }
@@ -16,7 +16,7 @@ li[data-type="task"] {
 }
 li[data-type="project"] {
   font-weight: bold;
-  line-height-multiple: 1.5;
+  line-height: 1.5;
 }
 li[data-done] > span[display] {
   text-decoration: line-through;
@@ -37,8 +37,12 @@ span[tag] {
   font-weight: normal;
   color: #b8b8b8;
 }
-li[data-type=task] {
+li[data-type=task],
+li[data-type=note] {
   color: #333333;
+}
+span[link] a {
+  text-decoration: none;
 }
 body {
   margin: 0;
@@ -56,7 +60,7 @@ ol {
 li {
   font-weight: normal;
   list-style-type: disc;
-  margin: 12px 0;
+  margin: 0;
 }
 li::marker {
   color: none;

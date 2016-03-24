@@ -16,6 +16,8 @@ class TaskPaperThemeConverter
 	def initialize(output_file_path)
 		@base_theme_path = "/Applications/TaskPaper.app/Contents/Resources/base.less"
 		@user_theme_path = "~/Library/Application Support/TaskPaper/theme.less"
+		#@base_theme_path = "/Applications/TaskPaper Preview.app/Contents/Resources/base.less"
+		#@user_theme_path = "/Applications/TaskPaper Preview.app/Contents/Resources/template.user.less"
 		@css_tweaks_path = File.dirname(__FILE__)+"/css/tweaks.css"
 		@css_fallback_path = File.dirname(__FILE__)+"/css/fallback.css"
 		@output_file_path = output_file_path
