@@ -1,28 +1,12 @@
 body {
   color: #333333;
+  ui-scale: 1;
   font-size: 16;
-  font-family: Source Sans Pro;
+  font-family: "Source Sans Pro", Helvetica, Verdana, sans-serif;
   background-color: white;
   line-height-multiple: 1.1;
-  item-indent: 20;
-  caret-width: 2;
-  caret-color: #fb3332;
-  drop-indicator-color: #fb3332;
-  invisibles-color: #fc7070;
-  folded-items-label: "¶—¶";
-  filtered-items-label: "¶—¶";
-  selection-background-color: #fec2c2;
-  guide-line-color: #ffebeb;
-  message-color: #999999;
-}
-sidebar {
-  search-item-prefix: ":: ";
-}
-li {
-  handle-color: #fed6d6;
-}
-li[collapsed] {
-  handle-color: #fb3332;
+  item-handle-size: 6;
+  guide-line-width: 1;
 }
 li[data-type="note"] {
   font-style: italic;
@@ -36,7 +20,6 @@ li[data-type="project"] {
 }
 li[data-done] > span[display] {
   text-decoration: line-through;
-  text-strikethrough-color: #333333;
 }
 span[link] {
   cursor: pointer;
@@ -54,17 +37,17 @@ span[tag] {
   font-weight: normal;
   color: #b8b8b8;
 }
+li[data-type=task] {
+  color: #333333;
+}
 body {
-  font-family: Helvetica, Verdana, sans-serif;
-  font-size: 20px;
   margin: 0;
   padding: 0;
-  line-height: 30px;
 }
 a,
 a:active,
 a:visited {
-  color: blue;
+  color: #fb3332;
 }
 ul,
 ol {
@@ -73,15 +56,22 @@ ol {
 li {
   font-weight: normal;
   list-style-type: disc;
-  margin: 5px 0;
+  margin: 12px 0;
+}
+li::marker {
+  color: none;
 }
 .extra-indent {
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
+ul,
 ul.extra-indent {
-  padding-left: 40px;
+  padding-left: 20;
+}
+#taskpaper-document .taskpaper-root {
+  margin-left: 5px;
 }
 .task-prefix {
   color: #888;
@@ -96,7 +86,7 @@ ul.extra-indent {
 }
 .sidebar,
 .sidebar ul {
-  padding-left: 20px;
+  padding-left: 10px;
 }
 .sidebar li {
   list-style-type: none;
@@ -117,4 +107,7 @@ ul.extra-indent {
 #taskpaper-document {
   margin-left: 200px;
   padding-bottom: 20px;
+}
+::selection {
+  background: #fec2c2;
 }

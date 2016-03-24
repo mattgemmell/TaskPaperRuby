@@ -5,7 +5,7 @@ One project:
 	- Call the person about the thing @today
 	Sub-project:
 		- This is an important thing @flag
-			This is a note @my-tag
+			This is a note with a link http://mattgemmell.com/ @my-tag
 	- A thing I should do @due(2016-03-29 2pm)
 Another project:
 	- Release some source code @done

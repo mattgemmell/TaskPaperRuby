@@ -41,8 +41,10 @@ class TaskPaperItem
 				end
 				
 				proj_id = (@type == TYPE_PROJECT) ? "id='#{id_attr}' " : ""
+				empty_attr = (@content == "" and children.length == 0) ? " empty" : ""
+				leaf_attr = (children.length == 0) ? " leaf" : ""
 				
-				output += "<li #{proj_id}class='#{type_name.downcase}' data-type='#{type_name.downcase}'#{tag_data_attrs} depth='#{effective_level + 1}'>"
+				output += "<li #{proj_id}class='#{type_name.downcase}' data-type='#{type_name.downcase}'#{tag_data_attrs} depth='#{effective_level + 1}'#{empty_attr}#{leaf_attr}>"
 				
 				posn = 0
 			

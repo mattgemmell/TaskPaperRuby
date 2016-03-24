@@ -67,11 +67,29 @@ class TaskPaperThemeConverter
 		if less_installed?
 			raw_content = ""
 			raw_content += file_contents(@base_theme_path) + "\n"
+			user_theme_offset = raw_content.length
 			raw_content += file_contents(@user_theme_path) + "\n"
+			tweaks_offset = raw_content.length
 			raw_content += file_contents(@css_tweaks_path, false)
 			
 			# Make some modifications
-			css_selector_regexp = /([a-zA-Z\-]+)\s*:\s*([^;]+)\s*;/i
+			#css_selector_regexp = /([a-zA-Z\-]+)\s*:\s*([^;]+)\s*;/i
+			
+			# Handle colour-overriding due to (correct) LI>UL HTML nesting,
+			# and reflect default link styling in TaskPaper
+			task_color_override = <<END
+
+item[data-type=task] {
+	color: @text-color;
+}
+
+run[link] a {
+	text-underline: NSUnderlineStyleNone;
+}
+
+END
+			raw_content = raw_content.insert(user_theme_offset, task_color_override)
+			
 			raw_content.gsub!(/\beditor\b/i, 'body')
 			raw_content.gsub!(/\b(?<!-)item(?!-)\b/i, 'li')
 			raw_content.gsub!(/\brun\b/i, 'span')
@@ -104,6 +122,94 @@ class TaskPaperThemeConverter
 				num_val = match[1]
 				range = Range.new(match.begin(1), match.end(1), true)
 				raw_content[range] = "\"#{num_val}\""
+			end
+			
+			# Quote font-family attributes
+			font_attr_regexp = /@?font-family\s*:\s*([^;]+);/i
+			font_attr_matches = raw_content.to_enum(:scan, font_attr_regexp).map { Regexp.last_match }
+			font_attr_matches.reverse.each do |match|
+				font_str = match[1]
+				range = Range.new(match.begin(1), match.end(1), true)
+				# Might have multiple fonts (comma-separated)
+				# For each, check it's not a @variable, and isn't already quoted (' or ")
+				fonts = font_str.split(',')
+				modified_fonts = []
+				fonts.each do |font|
+					font.strip!
+					if (/^['"].+?['"]$/i =~ font) == nil and font[0] != "@"
+						font = "\"#{font}\""
+					end
+					modified_fonts.push(font)
+				end
+				quoted_font_str = modified_fonts.join(", ")
+				# Special patch for the default app font
+				if /^["']Source Sans/ =~ quoted_font_str
+					quoted_font_str += ", Helvetica, Verdana, sans-serif"
+				end
+				
+				raw_content[range] = quoted_font_str
+			end
+			
+			# Paragraph spacing
+			raw_content.gsub!(/paragraph-spacing-before\s*:\s*(\d+);/i, 'margin-top: \1px;')
+			raw_content.gsub!(/paragraph-spacing-after\s*:\s*(\d+);/i, 'margin-bottom: \1px;')
+			
+			# Link colours
+			link_color_regexp = /(?-m)^[^\]\}]*?\[link\](?m)\s*?\{[^\{]*?(?-m)color\s*?:\s*?([^;\}]+?);/i
+			link_color = "blue"
+			link_color_matches = raw_content.to_enum(:scan, link_color_regexp).map { Regexp.last_match }
+			if link_color_matches and link_color_matches.length > 0
+				link_color = link_color_matches[-1][1].strip
+			end
+			raw_content.gsub!("$LINK_COLOR", link_color) # in tweaks CSS file
+			
+			# Selection background colour
+			sel_bg_regexp = /(?<!@)selection-background-color\s*:\s*([^;]+)\s*;/i
+			sel_bg_matches = raw_content.to_enum(:scan, sel_bg_regexp).map { Regexp.last_match }
+			if sel_bg_matches and sel_bg_matches.length > 0
+				sel_bg_color = sel_bg_matches[-1][1].strip
+				raw_content += "\n::selection { background: #{sel_bg_color}; }\n"
+			end
+			
+			# Handle colour (for future versions of browsers)
+			handle_color_regexp = /(?<!@)handle-color\s*:\s*([^;]+)\s*;/i
+			handle_color = "inherit"
+			handle_color_matches = raw_content.to_enum(:scan, handle_color_regexp).map { Regexp.last_match }
+			if handle_color_matches and handle_color_matches.length > 0
+				handle_color = handle_color_matches[-1][1].strip
+			end
+			raw_content.gsub!("$HANDLE_COLOR", handle_color) # in tweaks CSS file
+			
+			# Item indent
+			item_indent_regexp = /(?<!@)item-indent\s*:\s*([^;]+)\s*;/i
+			item_indent = "30"
+			item_indent_matches = raw_content.to_enum(:scan, item_indent_regexp).map { Regexp.last_match }
+			if item_indent_matches and item_indent_matches.length > 0
+				item_indent = item_indent_matches[-1][1].strip
+			end
+			raw_content.gsub!("$ITEM_INDENT", item_indent) # in tweaks CSS file
+			
+			# Strip inapplicable/incompatible selectors
+			strip_selectors = [
+								"search-item-prefix",
+								"caret-width",
+								"caret-color",
+								"invisibles-color",
+								"drop-indicator-color",
+								"guide-line-color",
+								"message-color",
+								"item-indent", # handled above
+								"folded-items-label",
+								"filtered-items-label",
+								"handle-color", # handled above
+								"selection-background-color", # handled above
+								"text-underline-color",
+								"text-strikethrough-color",
+								"text-expansion",
+								"text-baseline-offset",
+							  ]
+			strip_selectors.each do |sel|
+				raw_content.gsub!(/((?<!@)#{sel})\s*:\s*([^;]+)\s*;/i, '')
 			end
 			
 			# Convert with Less
