@@ -8,7 +8,11 @@ class TaskPaperEmoticonsExportPlugin < TaskPaperExportPlugin
 					{pattern: /;\-?\)/, replacement: '😉', class_name: 'wink'},
 					{pattern: /:\-?\//, replacement: '😕', class_name: 'confused'},
 				]
-
+	
+	class << self
+		attr_accessor :emoticons
+	end
+	
 	def process_text(item, run_text, output_type, before_conversion = true, options = {})
 		if output_type == OUTPUT_TYPE_HTML
 			

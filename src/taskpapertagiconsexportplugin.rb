@@ -9,6 +9,10 @@ class TaskPaperTagIconsExportPlugin < TaskPaperExportPlugin
 				"done"		=> {"replacement" => '✅'}
 			}
 	
+	class << self
+		attr_accessor :tags
+	end
+	
 	def process_tag_name(item, run_text, output_type, before_conversion = true, options = {})
 		if output_type == OUTPUT_TYPE_HTML
 			return tag_icon(run_text)
