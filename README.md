@@ -32,13 +32,15 @@ It does a few things:
 
 Here's what it makes of [my TaskPaper theme](http://mattgemmell.com/taskpaper-3/). This is the original file in TaskPaper:
 
-![TaskPaper file](https://c2.staticflickr.com/2/1704/25918471411_cdf2959995_c.jpg)
+![TaskPaper file](https://c2.staticflickr.com/2/1570/25426422743_ac5c3be362_c.jpg)
 
 And here's the resulting HTML file:
 
-![HTML export](https://c2.staticflickr.com/2/1655/25892678482_0c75c083d0_c.jpg)
+![HTML export](https://c2.staticflickr.com/2/1473/25962552091_95623b3731_c.jpg)
 
 You'll probably want to tweak the resulting CSS, but this should at least get you started.
+
+It also includes a series of plugins to modify the HTML (or text) output. For example, it'll render basic span-level [Markdown](https://en.wikipedia.org/wiki/Markdown) (like _emphasis_ / **emphasis** and `backticked code`), transform a few text emoticons into emoji, and substitute a few tag names/values with icons. You can enable or disable plugins in the `taskpaper-to-html.rb` file.
 
 
 ## How do I use it?
