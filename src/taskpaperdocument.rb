@@ -101,11 +101,31 @@ class TaskPaperDocument
 	end
 	
 	def items
+		return children
+	end
+	
+	def children
 		return (@root_item) ? @root_item.children : nil
 	end
 	
 	def add_child(child)
 		@root_item.add_child(child)
+	end
+	
+	def insert_child(child, index)
+		@root_item.insert_child(child, index)
+	end
+	
+	def remove_child(index)
+		@root_item.remove_child(index)
+	end
+	
+	def remove_children(range)
+		@root_item.remove_children(range)
+	end
+	
+	def remove_all_children
+		@root_item.remove_all_children
 	end
 	
 	def content

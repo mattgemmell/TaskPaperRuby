@@ -144,8 +144,35 @@ class TaskPaperItem
 	end
 	
 	def add_child(child)
-		@children.push(child)
-		child.parent = self
+		insert_child(child, -1)
+	end
+	
+	def insert_child(child, index)
+		if index <= @children.length
+			@children.insert(index, child) # /facepalm
+			child.parent = self
+		end
+	end
+	
+	def remove_child(index)
+		if index < @children.length
+			@children.delete_at(index)
+		end
+	end
+	
+	def remove_children(range)
+		if range.is_a?(Integer)
+			range = range..range
+		end
+		(range.last).downto(range.first) { |index|
+			if index < @children.length
+				@children.delete_at(index)
+			end
+		}
+	end
+	
+	def remove_all_children
+		@children = []
 	end
 	
 	def title
