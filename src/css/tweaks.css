@@ -80,3 +80,7 @@ ul, ul.extra-indent {
 	margin-left: 200px;
 	padding-bottom: 20px;
 }
+
+#taskpaper-document > ul > li:first-child {
+	margin-top: 0;
+}
