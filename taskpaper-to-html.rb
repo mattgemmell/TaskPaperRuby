@@ -87,15 +87,6 @@ template_vars = {
 template_vars.each { |key, value|
 	template_contents.gsub!(/\{\{\s*tp-#{key}\s*\}\}/i, value)
 }
-=begin
-template_variable_regexp = /\{\{\s*tp-(\S+)\s*\}\}/i
-var_matches = template_contents.to_enum(:scan, template_variable_regexp).map { Regexp.last_match }
-var_matches.reverse.each do |match|
-	token = match[1]
-	range = Range.new(match.begin(0), match.end(0), true)
-	template_contents[range] = template_vars[token]
-end
-=end
 
 # Write HTML file
 File.open(html_output_file_path, 'w') do |outfile|
