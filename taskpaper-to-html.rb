@@ -22,6 +22,10 @@ css_output_filename = "taskpaper-styles.css"
 require_relative 'src/taskpaperdocument'
 require_relative 'src/taskpaper+html'
 require_relative 'src/taskpaperthemeconverter'
+require_relative 'src/taskpaperexportpluginmanager'
+require_relative 'src/taskpapermarkdownexportplugin'
+require_relative 'src/taskpaperemoticonsexportplugin'
+require_relative 'src/taskpapertagiconsexportplugin'
 
 
 # Handle command line arguments
@@ -53,6 +57,11 @@ end
 # Load TaskPaper file
 document = TaskPaperDocument.new(input_file_path)
 
+# Enable some export plugins
+TaskPaperExportPluginManager.add_plugin(TaskPaperMarkdownExportPlugin.new)
+TaskPaperExportPluginManager.add_plugin(TaskPaperEmoticonsExportPlugin.new)
+TaskPaperExportPluginManager.add_plugin(TaskPaperTagIconsExportPlugin.new)
+
 # Produce HTML output from document
 document_html = document.to_html
 sidebar_html = document.to_sidebar
@@ -71,7 +80,7 @@ template_vars = {
 				"document-title" => File.basename(input_file_path, ".*"),
 				"css-output-filename" => css_output_filename,
 				"sidebar-html" => sidebar_html,
-				"document-html" => document_html
+				"document-html" => document_html,
 				}
 
 template_variable_regexp = /\{\{\s*tp-(\S+)\s*\}\}/i

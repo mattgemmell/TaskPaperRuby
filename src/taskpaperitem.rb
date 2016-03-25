@@ -1,5 +1,6 @@
 #!/usr/bin/ruby
 
+require_relative 'taskpaperexportpluginmanager'
 class TaskPaperItem
 	TYPE_NULL = 0
 	TYPE_TASK = 1
@@ -405,7 +406,8 @@ class TaskPaperItem
 		# Output own content, then children
 		output = ""
 		if @type != TYPE_NULL
-			output += "#{"\t" * (self.effective_level)}#{@content}#{@@linebreak}"
+			converted_content = TaskPaperPluginManager.process_text(self, @content, OUTPUT_TYPE_TEXT)
+			output += "#{"\t" * (self.effective_level)}#{converted_content}#{@@linebreak}"
 		end
 		@children.each do |child|
 			output += child.to_text

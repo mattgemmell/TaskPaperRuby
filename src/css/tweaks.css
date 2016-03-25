@@ -11,6 +11,11 @@ ul, ol {
 	margin: 0 auto 0 auto;
 }
 
+code {
+	background-color: #eee;
+	padding: 0 5px;
+}
+
 li {
 	font-weight: normal;
 	list-style-type: disc;

@@ -54,11 +54,13 @@ class TaskPaperItem
 					output += "#{@content[1]}</span>"
 					posn += 2
 				end
-			
+				
 				# Metadata
 				meta = metadata
 				if meta.length == 0
-					output += "<span class='display' display>#{@content[posn..-1]}</span>"
+					run_text = @content[posn..-1]
+					run_text = TaskPaperExportPluginManager.process_text(self, run_text, TaskPaperExportPlugin::OUTPUT_TYPE_HTML)
+					output += "<span class='display' display>#{run_text}</span>"
 					posn = @content.length
 				else
 					metadata.each_with_index do |m, i|
@@ -66,7 +68,9 @@ class TaskPaperItem
 						range_start = m[:range].begin
 						range_end = m[:range].end
 						if posn < range_start
-							output += "<span class='display' display>#{@content[posn..range_start - 1]}</span>"
+							run_text = @content[posn..range_start - 1]
+							run_text = TaskPaperExportPluginManager.process_text(self, run_text, TaskPaperExportPlugin::OUTPUT_TYPE_HTML)
+							output += "<span class='display' display>#{run_text}</span>"
 							posn = range_start;
 						end
 						
@@ -74,29 +78,36 @@ class TaskPaperItem
 						if m[:type] == "tag"
 							tagname = m[:name]
 							tagval = m[:value]
+							
+							tagval = TaskPaperExportPluginManager.process_tag_value(self, tagval, TaskPaperExportPlugin::OUTPUT_TYPE_HTML, true, {"tagname" => tagname})
+							tagname = TaskPaperExportPluginManager.process_tag_name(self, tagname, TaskPaperExportPlugin::OUTPUT_TYPE_HTML)
+							
 							# :name
 							output += "<span class='tag' tag='data-#{tagname}' tagname='data-#{tagname}' display>@#{tagname}</span>"
 							if tagval and tagval != ""
 								# (
 								output += "<span class='tag' tag='data-#{tagname}' display>(</span>"
-							
+								
 								# :value
 								output += "<span class='tag' tag='data-#{tagname}' tagvalue='#{tagval}' display>#{tagval}</span>"
-							
+								
 								# )
 								output += "<span class='tag' tag='data-#{tagname}' display>)</span>"
 							end
 						
 						elsif m[:type] == "link"
-							output += "<span class='link' link='#{m[:text]}' display><a href='#{m[:url]}' target='_blank'>#{m[:text]}</a></span>"
+							link_text = TaskPaperExportPluginManager.process_link(self, m[:text], TaskPaperExportPlugin::OUTPUT_TYPE_HTML)
+							output += "<span class='link' link='#{m[:text]}' display><a href='#{m[:url]}' target='_blank'>#{link_text}</a></span>"
 						end
 						posn = range_end
-					
+						
 						# If this is the last entry, output any remaining content afterwards
 						if i == meta.length - 1
 							content_len = @content.length
 							if posn < content_len
-								output += "<span class='display' display>#{@content[posn..-1]}</span>"
+								run_text = @content[posn..-1]
+								run_text = TaskPaperExportPluginManager.process_text(self, run_text, TaskPaperExportPlugin::OUTPUT_TYPE_HTML)
+								output += "<span class='display' display>#{run_text}</span>"
 								posn = range_start;
 							end
 							posn = content_len;

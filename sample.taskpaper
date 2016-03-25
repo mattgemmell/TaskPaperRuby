@@ -1,6 +1,6 @@
 One project:
-	- Here's a task
-	- Here's one with a link: http://twitter.com/mattgemmell
+	- Here's a task, converted by `ruby` :)
+	- Here's a _special_ task with a **link**: http://twitter.com/mattgemmell
 	- An example task goes here @my-tag @your-tag
 	- Call the person about the thing @today
 	Sub-project:
