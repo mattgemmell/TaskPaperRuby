@@ -47,6 +47,8 @@ class TaskPaperItem
 	end
 
 	def initialize(content)
+		Encoding.default_external = "utf-8"
+		
 		# Instance variables
 		if content
 			@content = content.gsub(/[\r\n]+/, '') # full text of item, without linebreak

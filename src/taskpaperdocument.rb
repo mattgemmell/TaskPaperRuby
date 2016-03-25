@@ -93,7 +93,7 @@ class TaskPaperDocument
 	def save_file(path = @file_path)
 		if path and path != ""
 			File.open(File.expand_path(path), 'w') do |outfile|
-				outfile.puts content
+				outfile.print content
 			end
 		else
 			puts "No path specified to save the file to."
@@ -129,7 +129,7 @@ class TaskPaperDocument
 	end
 	
 	def content
-		return to_text
+		return to_text.gsub!(/[\r\n]+\Z/, '')
 	end
 	
 	def to_text
