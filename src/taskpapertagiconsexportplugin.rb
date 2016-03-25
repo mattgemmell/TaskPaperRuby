@@ -3,10 +3,9 @@
 class TaskPaperTagIconsExportPlugin < TaskPaperExportPlugin
 
 	@@tags = {
-				"flag"		=> {"replacement" => '🚩'},
-				"priority"	=> {"replacement" => '💥', 
-								"values" => {"high" => "‼️", "1" => "‼️"}},
-				"done"		=> {"replacement" => '✅'}
+				"flag"		=> {"replacement" => '&#9873;'},
+				"priority"	=> {"values" => {"high" => "‼️", "1" => "‼️"}},
+				"done"		=> {"replacement" => '✔'}
 			}
 	
 	class << self
