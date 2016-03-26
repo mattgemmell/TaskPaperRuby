@@ -135,7 +135,7 @@ class TaskPaperItem
 		end
 		if @type == TYPE_NULL
 			if sidebar_mode
-				output = "<ul class='taskpaper-root sidebar'><li class='extra-indent' data-type='project'><a href='#top' title='Home'>{{ tp-document-filename }}</a><ul class='extra-indent'>#{output}</ul></li></ul>"
+				output = "<ul class='taskpaper-root sidebar'><li class='extra-indent' data-type='project'><a href='#top' title='Home'>{{ tp-document-title }}</a><ul class='extra-indent'>#{output}</ul></li></ul>"
 			else
 				output = "<ul class='taskpaper-root'>#{output}</ul>"
 			end
