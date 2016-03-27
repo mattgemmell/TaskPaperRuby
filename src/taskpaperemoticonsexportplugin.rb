@@ -21,7 +21,7 @@ class TaskPaperEmoticonsExportPlugin < TaskPaperExportPlugin
 				matches.reverse.each do |match|
 					text = match[0]
 					range = Range.new(match.begin(0), match.end(0), true)
-					run_text[range] = "<span class='emoticon #{emoticon[:class_name]}'>#{emoticon[:replacement]}</span>"
+					run_text[range] = "<span class='emoticon #{emoticon[:class_name]}' title='#{emoticon[:class_name]}'>#{emoticon[:replacement]}</span>"
 				end
 			end
 			

@@ -5,7 +5,8 @@ class TaskPaperTagIconsExportPlugin < TaskPaperExportPlugin
 	@@tags = {
 				"flag"		=> {"replacement" => '&#9873;'},
 				"priority"	=> {"values" => {"high" => "‼️", "1" => "‼️"}},
-				"done"		=> {"replacement" => '✔'}
+				"done"		=> {"replacement" => '✔'},
+				"search"	=> {"replacement" => '🔍'}
 			}
 	
 	class << self
@@ -34,15 +35,17 @@ class TaskPaperTagIconsExportPlugin < TaskPaperExportPlugin
 		if @@tags.include?(tagname)
 			tag_info = @@tags[tagname]
 			if wants_value
+				# Tag value
 				if tag_info.include?("values")
 					vals = tag_info["values"]
 					if vals.include?(tagval)
-						return vals[tagval]
+						return "<span class='tag-icon tag-value #{tagval}' title='#{tagval}'>#{vals[tagval]}</span>"
 					end
 				end
 			else
+				# Tag name
 				if tag_info.include?("replacement")
-					return tag_info["replacement"]
+					return "<span class='tag-icon #{tagname}' title='#{tagname}'>#{tag_info["replacement"]}</span>"
 				end
 			end
 		end
