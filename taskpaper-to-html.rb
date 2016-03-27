@@ -26,6 +26,7 @@ require_relative 'src/taskpaperexportpluginmanager'
 require_relative 'src/taskpapermarkdownexportplugin'
 require_relative 'src/taskpaperemoticonsexportplugin'
 require_relative 'src/taskpapertagiconsexportplugin'
+require_relative 'src/taskpaperentityencodingexportplugin'
 
 
 # Handle command line arguments
@@ -58,6 +59,7 @@ end
 document = TaskPaperDocument.new(input_file_path)
 
 # Enable some export plugins
+TaskPaperExportPluginManager.add_plugin(TaskPaperEntityEncodingExportPlugin.new)
 TaskPaperExportPluginManager.add_plugin(TaskPaperMarkdownExportPlugin.new)
 TaskPaperExportPluginManager.add_plugin(TaskPaperEmoticonsExportPlugin.new)
 TaskPaperExportPluginManager.add_plugin(TaskPaperTagIconsExportPlugin.new)

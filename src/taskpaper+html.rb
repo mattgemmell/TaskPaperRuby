@@ -58,6 +58,7 @@ class TaskPaperItem
 				# Metadata
 				meta = metadata
 				if meta.length == 0
+					# Output whole line if there's no metadata
 					run_text = @content[posn..-1]
 					run_text = TaskPaperExportPluginManager.process_text(self, run_text, TaskPaperExportPlugin::OUTPUT_TYPE_HTML)
 					output += "<span class='display' display>#{run_text}</span>"
@@ -117,20 +118,23 @@ class TaskPaperItem
 			elsif sidebar_mode
 				if only_type and only_type == TYPE_PROJECT and (@type == TYPE_PROJECT)
 					output += "<li class='#{type_name.downcase}' data-type='#{type_name.downcase}'#{tag_data_attrs}><a href='##{id_attr}' title='#{title}'>#{title}</a>"
+				else
+					output += "<li class='extra-indent'>"
 				end
 			end
-			if @children and @children.length > 0
-				output += "#{@@linebreak}<ul>#{@@linebreak}"
-			end
+		end
+		if @children and @children.length > 0 and @type != TYPE_NULL
+			output += "#{@@linebreak}<ul>#{@@linebreak}"
 		end
 		@children.each do |child|
 			output += child.to_html(only_type, sidebar_mode)
 		end
-		if @children and @children.length > 0
+		if @children and @children.length > 0 and @type != TYPE_NULL
 			output += "#{@@linebreak}</ul>#{@@linebreak}"
 		end
 		if @type != TYPE_NULL
 			output += "</li>#{@@linebreak}"
+			
 			@extra_indent.times do output += "</ul></li>" end
 		end
 		if @type == TYPE_NULL
