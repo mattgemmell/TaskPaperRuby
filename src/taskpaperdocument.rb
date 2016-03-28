@@ -116,6 +116,22 @@ class TaskPaperDocument
 		return (@root_item) ? @root_item.children_flat(only_type, pre_order) : nil
 	end
 	
+	def all_projects
+		return children_flat(TaskPaperItem::TYPE_PROJECT)
+	end
+	
+	def all_tasks
+		return children_flat(TaskPaperItem::TYPE_TASK)
+	end
+	
+	def all_notes
+		return children_flat(TaskPaperItem::TYPE_NOTE)
+	end
+	
+	def all_items
+		return children_flat
+	end
+	
 	def add_child(child)
 		return @root_item.add_child(child)
 	end
