@@ -152,6 +152,21 @@ class TaskPaperItem
 		return parent_indent + 1 + @extra_indent
 	end
 	
+	def project
+		# Returns closest ancestor project
+		project = nil
+		ancestor = @parent
+		while ancestor and ancestor.type != TYPE_NULL
+			if ancestor.type == TYPE_PROJECT
+				project = ancestor
+				break
+			else
+				ancestor = ancestor.parent
+			end
+		end
+		return project
+	end
+	
 	def children_flat(only_type = TaskPaperItem::TYPE_ANY, pre_order = true)
 		# Recursively return a flat array of items, optionally filtered by type
 		# (This is a depth-first traversal; set pre_order to false for post-order)
@@ -314,7 +329,7 @@ class TaskPaperItem
 		return has_tag?("done")
 	end
 	
-	def set_done(val)
+	def set_done(val = true)
 		is_done = done?
 		if val == true and !is_done
 			set_tag("done")
