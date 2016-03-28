@@ -104,32 +104,44 @@ class TaskPaperDocument
 		return children
 	end
 	
+	def items_flat(only_type = TaskPaperItem::TYPE_ANY, pre_order = true)
+		return children_flat(only_type, pre_order)
+	end
+	
 	def children
 		return (@root_item) ? @root_item.children : nil
 	end
 	
+	def children_flat(only_type = TaskPaperItem::TYPE_ANY, pre_order = true)
+		return (@root_item) ? @root_item.children_flat(only_type, pre_order) : nil
+	end
+	
 	def add_child(child)
-		@root_item.add_child(child)
+		return @root_item.add_child(child)
 	end
 	
 	def insert_child(child, index)
-		@root_item.insert_child(child, index)
+		return @root_item.insert_child(child, index)
 	end
 	
 	def remove_child(index)
-		@root_item.remove_child(index)
+		return @root_item.remove_child(index)
 	end
 	
 	def remove_children(range)
-		@root_item.remove_children(range)
+		return @root_item.remove_children(range)
 	end
 	
 	def remove_all_children
-		@root_item.remove_all_children
+		return @root_item.remove_all_children
 	end
 	
 	def content
 		return to_text.gsub!(/[\r\n]+\Z/, '')
+	end
+	
+	def to_s
+		return to_text
 	end
 	
 	def to_text

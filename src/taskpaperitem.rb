@@ -2,10 +2,11 @@
 
 require_relative 'taskpaperexportpluginmanager'
 class TaskPaperItem
-	TYPE_NULL = 0
-	TYPE_TASK = 1
-	TYPE_PROJECT = 2
-	TYPE_NOTE = 3
+	TYPE_ANY = 0
+	TYPE_NULL = 1
+	TYPE_TASK = 2
+	TYPE_PROJECT = 3
+	TYPE_NOTE = 4
 	
 	LINEBREAK_UNIX = "\n" # Unix, Linux, and Mac OS X
 	LINEBREAK_MAC = "\r" # classic Mac OS 9 and older
@@ -74,6 +75,7 @@ class TaskPaperItem
 		content_start = TaskPaperItem.leading_indentation_length(@content)
 		if content_start > 0
 			@extra_indent += TaskPaperItem.leading_indentation_levels(@content[0..content_start])
+			@content = @content[content_start, @content.length]
 		end
 		
 		# Type of item
@@ -139,6 +141,10 @@ class TaskPaperItem
 	
 	def effective_level
 		# Actual (visual) indentation level
+		if !@parent and @type != TYPE_NULL
+			return @extra_indent
+		end
+		
 		parent_indent = -2 # nominal parent of root (-1) item
 		if @parent
 			parent_indent = @parent.effective_level
@@ -146,20 +152,48 @@ class TaskPaperItem
 		return parent_indent + 1 + @extra_indent
 	end
 	
+	def children_flat(only_type = TaskPaperItem::TYPE_ANY, pre_order = true)
+		# Recursively return a flat array of items, optionally filtered by type
+		# (This is a depth-first traversal; set pre_order to false for post-order)
+		
+		result = []
+		@children.each do |child|
+			result = result.concat(child.children_flat(only_type, pre_order))
+		end
+		
+		if @type != TYPE_NULL and only_type and (only_type == TYPE_ANY or only_type == @type)
+			if pre_order
+				result = result.unshift(self)
+			else
+				result = result.push(self)
+			end
+		end
+		
+		return result
+	end
+	
 	def add_child(child)
-		insert_child(child, -1)
+		return insert_child(child, -1)
 	end
 	
 	def insert_child(child, index)
 		if index <= @children.length
+			if child.is_a?(String)
+				child = TaskPaperItem.new(child)
+			end
 			@children.insert(index, child) # /facepalm
 			child.parent = self
+			return child
 		end
+		return nil
 	end
 	
 	def remove_child(index)
 		if index < @children.length
+			child = @children[index]
+			child.parent = nil
 			@children.delete_at(index)
+			return child
 		end
 	end
 	
@@ -167,15 +201,20 @@ class TaskPaperItem
 		if range.is_a?(Integer)
 			range = range..range
 		end
+		removed = []
 		(range.last).downto(range.first) { |index|
 			if index < @children.length
+				child = @children[index]
+				removed.push(child)
+				child.parent = nil
 				@children.delete_at(index)
 			end
 		}
+		return removed
 	end
 	
 	def remove_all_children
-		@children = []
+		return remove_children(0..(@children.length - 1))
 	end
 	
 	def title
@@ -406,7 +445,7 @@ class TaskPaperItem
 		# Output own content, then children
 		output = ""
 		if @type != TYPE_NULL
-			converted_content = TaskPaperPluginManager.process_text(self, @content, OUTPUT_TYPE_TEXT)
+			converted_content = TaskPaperExportPluginManager.process_text(self, @content, TaskPaperExportPlugin::OUTPUT_TYPE_TEXT)
 			output += "#{"\t" * (self.effective_level)}#{converted_content}#{@@linebreak}"
 		end
 		@children.each do |child|
