@@ -132,6 +132,24 @@ class TaskPaperDocument
 		return children_flat
 	end
 	
+	def all_tasks_not_done
+		return all_tasks.select { |item| !(item.done?) }
+	end
+	
+	def all_items_with_tag(tag, value = nil)
+		return all_items.select { |item|
+			if tag == nil
+				false
+			else
+				if value != nil
+					(item.has_tag?(tag) and item.tag_value(tag) == value)
+				else
+					item.has_tag?(tag) 
+				end
+			end
+		}
+	end
+	
 	def add_child(child)
 		return @root_item.add_child(child)
 	end

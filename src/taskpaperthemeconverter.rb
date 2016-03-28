@@ -173,7 +173,7 @@ END
 				raw_content += "\n::selection { background: #{sel_bg_color}; }\n"
 			end
 			
-			# Handle colour (for future versions of browsers)
+			# Handle-colour (for future versions of browsers)
 			handle_color_regexp = /(?<!@)handle-color\s*:\s*([^;]+)\s*;/i
 			handle_color = "inherit"
 			handle_color_matches = raw_content.to_enum(:scan, handle_color_regexp).map { Regexp.last_match }

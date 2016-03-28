@@ -22,11 +22,10 @@ new_child.set_done
 
 proj.add_child("- A fourth task")
 
-# Get a flat list of all tasks in the document, then select those not yet done
-tasks = doc.children_flat(TaskPaperItem::TYPE_TASK)
-tasks_to_do = tasks.select { |item| !(item.done?) }
+# Get a flat list of all tasks in the document that aren't done yet
+tasks_to_do = doc.all_tasks_not_done
 
-# Output our undone tasks with the names of their containing projects
+# Output our tasks with the names of their containing projects
 puts tasks_to_do.map { |t| "#{t.title} (#{t.project.title})" }
 
 # To output doc in TaskPaper format

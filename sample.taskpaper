@@ -10,8 +10,8 @@ One project:
 Another project:
 	- Release some source code @done
 	- Email matt@mattgemmell.com or visit his site at mattgemmell.com
-	- Work on that thing @context(work) @priority(high)
-	- Get some exercise @context(outside) @flag
+	- Work on that thing @context(work)
+	- Get some exercise @context(outside)
 Priorities:
 	- This is very important @priority(high)
 	- So is this @priority(1)
