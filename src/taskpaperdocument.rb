@@ -5,6 +5,10 @@ class TaskPaperDocument
 	
 	attr_accessor :file_path
 	
+	def self.open(path)
+		return self.new(path)
+	end
+	
 	def initialize(file_path = nil)
 		@file_path = file_path
 		
@@ -12,10 +16,14 @@ class TaskPaperDocument
 		load_file
 	end
 	
-	def load_file
+	def load_file(path = nil)
 		# Load TaskPaper file
 		@root_item = TaskPaperItem.new(nil)
 		raw_content = []
+		
+		if path != nil
+			@file_path = path
+		end
 		
 		if @file_path and @file_path != ""
 			@file_path = File.expand_path(file_path)
