@@ -150,6 +150,10 @@ class TaskPaperDocument
 		}
 	end
 	
+	def all_tags(with_values = true, prefixed = false)
+		return (@root_item) ? @root_item.all_tags(with_values, prefixed).uniq.sort : nil
+	end
+	
 	def add_child(child)
 		return @root_item.add_child(child)
 	end

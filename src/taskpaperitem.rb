@@ -433,6 +433,30 @@ class TaskPaperItem
 		return output
 	end
 	
+	def all_tags(with_values = true, prefixed = false)
+		# Text output with just item tags
+		
+		# Output own content, then children
+		output = []
+		if @type != TYPE_NULL
+			if @tags.length > 0
+				prefix = (prefixed) ? "@" : ""
+				@tags.each do |tag|
+					tag_value = ""
+					if (with_values)
+						tag_val = tag_value(tag[:name])
+					end
+					value_suffix = (with_values and tag_val != "") ? "(#{tag_val})" : ""
+					output.push("#{prefix}#{tag[:name]}#{value_suffix}")
+				end
+			end
+		end
+		@children.each do |child|
+			output += child.all_tags(with_values, prefixed)
+		end
+		return output
+	end
+	
 	def to_links(add_missing_protocols = true)
 		# Text output with just item links
 		
