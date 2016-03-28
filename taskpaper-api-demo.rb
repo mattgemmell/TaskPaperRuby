@@ -3,7 +3,7 @@
 require_relative 'src/taskpaperdocument'
 
 # Make a new document and add a project
-doc = TaskPaperDocument.new("~/Desktop/demo.taskpaper")
+doc = TaskPaperDocument.new("~/Desktop/demo.taskpaper") # will be loaded if it exists
 proj = TaskPaperItem.new("My project:")
 doc.add_child(proj)
 
