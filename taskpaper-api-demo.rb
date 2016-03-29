@@ -28,6 +28,9 @@ tasks_to_do = doc.all_tasks_not_done
 # Output our tasks with the names of their containing projects
 puts tasks_to_do.map { |t| "#{t.title} (#{t.project.title})" }
 
+# To get all tasks that aren't done yet and are due today (or earlier)
+# puts doc.due_today.map { |t| t.title }
+
 # To output doc in TaskPaper format
 # puts doc.to_text
 

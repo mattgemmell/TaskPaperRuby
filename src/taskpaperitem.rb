@@ -19,6 +19,7 @@ class TaskPaperItem
 	@@tab_regexp = /^(?:\t|\ {#{@@tab_size}})+/io
 	@@project_regexp = /^(?>\s*)(?>[^-].*?:)(\s*@\S+)*\s*$/i
 	@@tag_regexp = /\B@((?>[a-zA-Z0-9\.\-_]+))(?:\((.*?(?<!\\))\))?/i
+	@@tags_rstrip_regexp = /(\s*\@[^\.\s\(\)\\]+(\(.+?(?<!\\)\))?){1,}$/i
 	@@uri_regexp = /([a-zA-Z0-9\-_\+\.]+:(?:\/\/)?(?:[a-zA-Z0-9\-_\.\+]+)(?::[a-zA-Z0-9\-_\.\+]+)*@?(?:[a-zA-Z0-9\-]+\.){1,}[a-zA-Z]{2,}(?::\d+)?(?:[\/\?]\S*)?)/i
 	@@email_regexp = /([a-zA-Z0-9\-\_\+\.]+\@\S+\.\S+)/i
 	@@domain_regexp = /((?<!@)\b(?:[a-zA-Z0-9\-]+\.){1,}[a-zA-Z]{2,}(?::\d+)?(?:[\/\?]\S*)?)/i
@@ -236,7 +237,7 @@ class TaskPaperItem
 		if @type == TYPE_PROJECT
 			return @content[0..@content.index(':') - 1]
 		elsif @type == TYPE_TASK
-			return @content[2..-1]
+			return @content[2..-1].gsub(@@tags_rstrip_regexp, '')
 		else
 			return @content
 		end
