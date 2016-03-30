@@ -84,7 +84,8 @@ class TaskPaperItem
 							tagval_display = TaskPaperExportPluginManager.process_tag_value(self, tagval, TaskPaperExportPlugin::OUTPUT_TYPE_HTML, true, {"tagname" => tagname})
 							
 							# :name
-							output += "<span class='tag' tag='data-#{tagname}' tagname='data-#{tagname}' display>@#{tagname_display}</span>"
+							title_attr = (tagval != "") ? " title='#{tagval}'" : ""
+							output += "<span class='tag' tag='data-#{tagname}' tagname='data-#{tagname}'#{title_attr} display>@#{tagname_display}</span>"
 							if tagval and tagval != ""
 								# (
 								output += "<span class='tag' tag='data-#{tagname}' display>(</span>"

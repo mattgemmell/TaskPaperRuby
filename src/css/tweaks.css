@@ -86,3 +86,19 @@ ul, ul.extra-indent {
 #taskpaper-document > ul > li:first-child {
 	margin-top: 0;
 }
+
+[tag=data-search][tagvalue] {
+	display: none;
+}
+
+[tag=data-search][tagname] + [display]:after {
+	content: "…";
+}
+
+[tag=data-search][tagname]:hover + [display] + [tagvalue] {
+	display: inline;
+}
+
+[tag=data-search][tagname]:hover + [display]:after {
+	content: "";
+}
