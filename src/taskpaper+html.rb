@@ -124,16 +124,16 @@ class TaskPaperItem
 			end
 		end
 		if @children and @children.length > 0 and @type != TYPE_NULL
-			output += "#{@@linebreak}<ul>#{@@linebreak}"
+			output += "#{TaskPaperItem.linebreak}<ul>#{TaskPaperItem.linebreak}"
 		end
 		@children.each do |child|
 			output += child.to_html(only_type, sidebar_mode)
 		end
 		if @children and @children.length > 0 and @type != TYPE_NULL
-			output += "#{@@linebreak}</ul>#{@@linebreak}"
+			output += "#{TaskPaperItem.linebreak}</ul>#{TaskPaperItem.linebreak}"
 		end
 		if @type != TYPE_NULL
-			output += "</li>#{@@linebreak}"
+			output += "</li>#{TaskPaperItem.linebreak}"
 			
 			@extra_indent.times do output += "</ul></li>" end
 		end

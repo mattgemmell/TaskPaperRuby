@@ -3,7 +3,7 @@
 require_relative 'taskpaperexportplugin'
 class TaskPaperExportPluginManager
 	@@plugins = []
-	@@plugins_enabled = true
+	@plugins_enabled = true
 	
 	class << self
 		attr_reader :plugins
@@ -26,7 +26,7 @@ class TaskPaperExportPluginManager
 	
 	def self.process_text(item, run_text, output_type, before_conversion = true, options = {})
 		output = run_text
-		if @@plugins_enabled
+		if TaskPaperExportPluginManager.plugins_enabled
 			@@plugins.each do |plugin|
 				output = plugin.process_text(item, run_text, output_type, before_conversion, options)
 			end
@@ -36,7 +36,7 @@ class TaskPaperExportPluginManager
 	
 	def self.process_link(item, run_text, output_type, before_conversion = true, options = {})
 		output = run_text
-		if @@plugins_enabled
+		if TaskPaperExportPluginManager.plugins_enabled
 			@@plugins.each do |plugin|
 				output = plugin.process_link(item, run_text, output_type, before_conversion, options)
 			end
@@ -46,7 +46,7 @@ class TaskPaperExportPluginManager
 	
 	def self.process_tag_name(item, run_text, output_type, before_conversion = true, options = {})
 		output = run_text
-		if @@plugins_enabled
+		if TaskPaperExportPluginManager.plugins_enabled
 			@@plugins.each do |plugin|
 				output = plugin.process_tag_name(item, run_text, output_type, before_conversion, options)
 			end
@@ -56,7 +56,7 @@ class TaskPaperExportPluginManager
 	
 	def self.process_tag_value(item, run_text, output_type, before_conversion = true, options = {})
 		output = run_text
-		if @@plugins_enabled
+		if TaskPaperExportPluginManager.plugins_enabled
 			@@plugins.each do |plugin|
 				output = plugin.process_tag_value(item, run_text, output_type, before_conversion, options)
 			end

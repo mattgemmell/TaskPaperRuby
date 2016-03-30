@@ -2,7 +2,7 @@
 
 class TaskPaperTagIconsExportPlugin < TaskPaperExportPlugin
 
-	@@tags = {
+	@tags = {
 				"flag"		=> {"replacement" => '&#9873;'},
 				"priority"	=> {"values" => {"high" => "‼️", "1" => "‼️"}},
 				"done"		=> {"replacement" => '✔'},
@@ -32,8 +32,8 @@ class TaskPaperTagIconsExportPlugin < TaskPaperExportPlugin
 	def tag_icon(tagname, tagval = nil)
 		wants_value = (tagval != nil)
 		result = (wants_value) ? tagval : tagname
-		if @@tags.include?(tagname)
-			tag_info = @@tags[tagname]
+		if TaskPaperTagIconsExportPlugin.tags.include?(tagname)
+			tag_info = TaskPaperTagIconsExportPlugin.tags[tagname]
 			if wants_value
 				# Tag value
 				if tag_info.include?("values")

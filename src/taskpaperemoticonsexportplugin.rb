@@ -2,7 +2,7 @@
 
 class TaskPaperEmoticonsExportPlugin < TaskPaperExportPlugin
 
-	@@emoticons = [
+	@emoticons = [
 					{pattern: /:\-?\)/, replacement: '😃', class_name: 'smile'},
 					{pattern: /:\-?\(/, replacement: '🙁', class_name: 'sadface'},
 					{pattern: /;\-?\)/, replacement: '😉', class_name: 'wink'},
@@ -16,7 +16,7 @@ class TaskPaperEmoticonsExportPlugin < TaskPaperExportPlugin
 	def process_text(item, run_text, output_type, before_conversion = true, options = {})
 		if output_type == OUTPUT_TYPE_HTML
 			
-			@@emoticons.each do |emoticon|
+			TaskPaperEmoticonsExportPlugin.emoticons.each do |emoticon|
 				matches = run_text.to_enum(:scan, emoticon[:pattern]).map { Regexp.last_match }
 				matches.reverse.each do |match|
 					text = match[0]

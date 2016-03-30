@@ -12,12 +12,18 @@ class TaskPaperItem
 	LINEBREAK_MAC = "\r" # classic Mac OS 9 and older
 	LINEBREAK_WINDOWS = "\r\n" # DOS and Windows
 	
-	@@linebreak = LINEBREAK_UNIX
-	@@tab_size = 4 # Number of spaces used per indentation level (if tabs aren't used)
+	@linebreak = LINEBREAK_UNIX
+	@tab_size = 4 # Number of spaces used per indentation level (if tabs aren't used)
+	@convert_atx_headings = false # ie. Markdown "## Headings" to "Projects:"
+	
+	class << self
+		attr_accessor :linebreak, :tab_size, :convert_atx_headings
+	end
 	
 	# If you want to inspect and debug these, may I suggest https://regex101.com ?
-	@@tab_regexp = /^(?:\t|\ {#{@@tab_size}})+/io
+	@@tab_regexp = /^(?:\t|\ {#{TaskPaperItem.tab_size}})+/io
 	@@project_regexp = /^(?>\s*)(?>[^-].*?:)(\s*@\S+)*\s*$/i
+	@@atx_headings_regexp = /^(\s*?)\#+\s*([^:]+?)$/i
 	@@tag_regexp = /\B@((?>[a-zA-Z0-9\.\-_]+))(?:\((.*?(?<!\\))\))?/i
 	@@tags_rstrip_regexp = /(\s*\@[^\.\s\(\)\\]+(\(.+?(?<!\\)\))?){1,}$/i
 	@@uri_regexp = /([a-zA-Z0-9\-_\+\.]+:(?:\/\/)?(?:[a-zA-Z0-9\-_\.\+]+)(?::[a-zA-Z0-9\-_\.\+]+)*@?(?:[a-zA-Z0-9\-]+\.){1,}[a-zA-Z]{2,}(?::\d+)?(?:[\/\?]\S*)?)/i
@@ -28,10 +34,6 @@ class TaskPaperItem
 	attr_reader :children, :type, :tags, :links
 	attr_accessor :parent, :content, :extra_indent
 	
-	class << self
-		attr_accessor :linebreak, :tab_size
-	end
-
 	def self.leading_indentation_length(line)
 		# Returns character-length of leading tab/space indentation in line
 		indent_len = 0
@@ -45,7 +47,7 @@ class TaskPaperItem
 	def self.leading_indentation_levels(line)
 		# Returns number of leading tab/space indentation levels in WHITESPACE-ONLY line
 		num_tab_indents = line.scan(/\t/).length
-		num_space_indents = line.scan(/\ {#{@@tab_size}}/o).length
+		num_space_indents = line.scan(/\ {#{TaskPaperItem.tab_size}}/o).length
 		return num_tab_indents + num_space_indents
 	end
 
@@ -77,6 +79,14 @@ class TaskPaperItem
 		if content_start > 0
 			@extra_indent += TaskPaperItem.leading_indentation_levels(@content[0..content_start])
 			@content = @content[content_start, @content.length]
+		end
+		
+		# Markdown-style ATX headings conversion
+		if TaskPaperItem.convert_atx_headings
+			heading_match = @@atx_headings_regexp.match(@content)
+			if heading_match
+				@content.gsub!(heading_match[0], "#{heading_match[1]}#{heading_match[2]}:")
+			end
 		end
 		
 		# Type of item
@@ -398,7 +408,7 @@ class TaskPaperItem
 		output = ""
 		if @type != TYPE_NULL
 			suffix = (include_titles) ? " #{title}" : ""
-			output += "#{"\t" * (self.effective_level)}[#{type_name}]#{suffix}#{@@linebreak}"
+			output += "#{"\t" * (self.effective_level)}[#{type_name}]#{suffix}#{TaskPaperItem.linebreak}"
 		end
 		@children.each do |child|
 			output += child.to_structure(include_titles)
@@ -426,7 +436,7 @@ class TaskPaperItem
 			else
 				output += "(none)"
 			end
-			output += "#{@@linebreak}"
+			output += "#{TaskPaperItem.linebreak}"
 		end
 		@children.each do |child|
 			output += child.to_tags(include_values)
@@ -469,7 +479,7 @@ class TaskPaperItem
 			if @links.length > 0
 				key = (add_missing_protocols) ? :url : :text
 				@links.each do |link|
-					output += "#{link[key]}#{@@linebreak}"
+					output += "#{link[key]}#{TaskPaperItem.linebreak}"
 				end
 			end
 		end
@@ -486,7 +496,7 @@ class TaskPaperItem
 		output = ""
 		if @type != TYPE_NULL
 			converted_content = TaskPaperExportPluginManager.process_text(self, @content, TaskPaperExportPlugin::OUTPUT_TYPE_TEXT)
-			output += "#{"\t" * (self.effective_level)}#{converted_content}#{@@linebreak}"
+			output += "#{"\t" * (self.effective_level)}#{converted_content}#{TaskPaperItem.linebreak}"
 		end
 		@children.each do |child|
 			output += child.to_text
