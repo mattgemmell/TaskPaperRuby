@@ -188,6 +188,10 @@ class TaskPaperDocument
 		return @root_item.insert_child(child, index)
 	end
 	
+	def add_children(children)
+		return @root_item.add_children(children)
+	end
+	
 	def remove_child(index)
 		return @root_item.remove_child(index)
 	end

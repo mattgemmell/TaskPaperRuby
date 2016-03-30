@@ -214,7 +214,22 @@ class TaskPaperItem
 		return nil
 	end
 	
+	def add_children(children)
+		result = []
+		children.each do |child|
+			result.push(insert_child(child, -1))
+		end
+		return result
+	end
+	
 	def remove_child(index)
+		if index.is_a?(TaskPaperItem)
+			if @children.include?(index)
+				index = @children.index(index)
+			else
+				return index
+			end
+		end
 		if index < @children.length
 			child = @children[index]
 			child.parent = nil
@@ -241,6 +256,34 @@ class TaskPaperItem
 	
 	def remove_all_children
 		return remove_children(0..(@children.length - 1))
+	end
+	
+	def previous_sibling
+		sibling = nil
+		if @parent and @parent.type != TYPE_NULL
+			siblings = @parent.children
+			if siblings.length > 1
+				my_index = siblings.index(self)
+				if my_index > 0
+					return siblings[my_index - 1]
+				end
+			end
+		end
+		return sibling
+	end
+	
+	def next_sibling
+		sibling = nil
+		if @parent and @parent.type != TYPE_NULL
+			siblings = @parent.children
+			if siblings.length > 1
+				my_index = siblings.index(self)
+				if my_index < siblings.length - 1
+					return siblings[my_index + 1]
+				end
+			end
+		end
+		return sibling
 	end
 	
 	def title
