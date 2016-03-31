@@ -71,7 +71,7 @@ class TaskPaperItem
 		end
 	end
 	
-	def parse
+	def parse # private method
 		# Parse @content to populate our instance variables
 		
 		# Leading indentation
@@ -288,7 +288,7 @@ class TaskPaperItem
 	
 	def title
 		if @type == TYPE_PROJECT
-			return @content[0..@content.index(':') - 1]
+			return @content[0..@content.rindex(':') - 1]
 		elsif @type == TYPE_TASK
 			return @content[2..-1].gsub(@@tags_rstrip_regexp, '')
 		else
@@ -363,6 +363,48 @@ class TaskPaperItem
 		return output
 	end
 	
+	def change_to(new_type)
+		# Takes a type constant, e.g. TYPE_TASK etc.
+		if (@type != TYPE_NULL and @type != TYPE_ANY and
+			new_type != TYPE_NULL and new_type != TYPE_ANY and 
+			@type != new_type)
+			
+			# Use note as our base type
+			if @type == TYPE_TASK
+				# Strip task prefix
+				@content = @content[2..-1]
+				
+			elsif @type == TYPE_PROJECT
+				# Strip rightmost colon
+				rightmost_colon_index = @content.rindex(":")
+				if rightmost_colon_index != nil
+					@content[rightmost_colon_index, 1] = ""
+				end
+			end
+			
+			if new_type == TYPE_TASK
+				# Add task prefix
+				@content = "- #{@content}"
+				
+			elsif new_type == TYPE_PROJECT
+				# Add colon
+				insertion_index = -1
+				match = @content.match(@@tags_rstrip_regexp)
+				if match
+					insertion_index = match.begin(0)
+				else
+					last_non_whitespace_char_index = @content.rindex(/\S/i)
+					if last_non_whitespace_char_index != nil
+						insertion_index = last_non_whitespace_char_index + 1
+					end
+				end
+				@content[insertion_index, 0] = ":"
+			end 
+			
+			parse
+		end
+	end
+	
 	def tag_value(name)
 		# Returns value of tag 'name', or empty string if either the tag exists but has no value, or the tag doesn't exist at all.
 		
@@ -401,12 +443,12 @@ class TaskPaperItem
 		return "@#{name}#{val}"
 	end
 	
-	def set_tag(name, value = "")
+	def set_tag(name, value = "", force_new = false)
 		# If tag doesn't already exist, add it at the end of content.
 		# If tag does exist, replace its range with new form of the tag via tag_string.
 		value = (value != nil) ? value : ""
 		new_tag = tag_string(name, value)
-		if has_tag?(name)
+		if has_tag?(name) and !force_new
 			tag = @tags.find {|x| x[:name].downcase == name}
 			@content[tag[:range]] = new_tag
 		else
@@ -415,34 +457,55 @@ class TaskPaperItem
 		parse
 	end
 	
+	def add_tag(name, value = "", force_new = true)
+		# This method, unlike set_tag_, defaults to adding a new tag even if a tag of the same name already exists.
+		set_tag(name, value, force_new)
+	end
+	
 	def remove_tag(name)
 		if has_tag?(name)
 			# Use range(s), in reverse order.
 			@tags.reverse.each do |tag|
 				if tag[:name] == name
-					range = tag[:range]
-					whitespace_regexp = /\s/i
-					content_len = @content.length
-					tag_start = range.begin
-					tag_end = range.end
-					whitespace_before = (tag_start > 0 and (whitespace_regexp =~ @content[tag_start - 1]) != nil)
-					whitespace_after = (tag_end < content_len - 1 and (whitespace_regexp =~ @content[tag_end]) != nil)
-					if whitespace_before and whitespace_after
-						# If tag has whitespace before and after, also remove the whitespace before.
-						range = Range.new(tag_start - 1, tag_end, true)
-					elsif tag_start == 0 and whitespace_after
-						# If tag is at start of line and has whitespace after, also remove the whitespace after.
-						range = Range.new(tag_start, tag_end + 1, true)
-					elsif tag_end == content_len - 1 and whitespace_before
-						# If tag is at end of line and has whitespace before, also remove the whitespace before.
-						range = Range.new(tag_start - 1, tag_end, true)
-					end
-					@content[range] = ""
+					strip_tag(tag)
 				end
 			end
 			parse
 		end
 	end
+	
+	def remove_all_tags
+		@tags.reverse.each do |tag|
+			strip_tag(tag)
+		end
+		parse
+	end
+	
+	def strip_tag(tag) # private method
+		# Takes a tag hash, and removes the tag from @content
+		# Does not perform a #parse, but we should do so afterwards.
+		# If calling multiple times before a #parse, do so in reverse order in @content.
+		
+		range = tag[:range]
+		whitespace_regexp = /\s/i
+		content_len = @content.length
+		tag_start = range.begin
+		tag_end = range.end
+		whitespace_before = (tag_start > 0 and (whitespace_regexp =~ @content[tag_start - 1]) != nil)
+		whitespace_after = (tag_end < content_len - 1 and (whitespace_regexp =~ @content[tag_end]) != nil)
+		if whitespace_before and whitespace_after
+			# If tag has whitespace before and after, also remove the whitespace before.
+			range = Range.new(tag_start - 1, tag_end, true)
+		elsif tag_start == 0 and whitespace_after
+			# If tag is at start of line and has whitespace after, also remove the whitespace after.
+			range = Range.new(tag_start, tag_end + 1, true)
+		elsif tag_end == content_len - 1 and whitespace_before
+			# If tag is at end of line and has whitespace before, also remove the whitespace before.
+			range = Range.new(tag_start - 1, tag_end, true)
+		end
+		@content[range] = ""
+	end
+	private :strip_tag
 
 	def to_structure(include_titles = true)
 		# Indented text output with items labelled by type, and project/task decoration stripped
