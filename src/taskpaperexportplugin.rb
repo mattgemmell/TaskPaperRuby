@@ -3,6 +3,7 @@
 class TaskPaperExportPlugin
 	OUTPUT_TYPE_TEXT = 0 # textual output, such as a TaskPaper-format file
 	OUTPUT_TYPE_HTML = 1 # HTML output
+	OUTPUT_TYPE_JSON = 2 # JSON output ( http://json.org )
 	
 	RUN_TYPE_TEXT = 0 # any plain-text run within an item
 	RUN_TYPE_TAG_NAME = 1

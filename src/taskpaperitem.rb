@@ -425,6 +425,10 @@ class TaskPaperItem
 		return has_tag?("done")
 	end
 	
+	def is_done?
+		return done?
+	end
+	
 	def set_done(val = true)
 		is_done = done?
 		if val == true and !is_done
@@ -596,7 +600,7 @@ class TaskPaperItem
 	end
 	
 	def to_text
-		# Indent text output of original content, with normalised (tab) indentation
+		# Indented text output of original content, with normalised (tab) indentation
 		
 		# Output own content, then children
 		output = ""
@@ -609,4 +613,78 @@ class TaskPaperItem
 		end
 		return output
 	end
+	
+	def to_json
+		# Hierarchical output of content as JSON: http://json.org
+		
+		output = ""
+		if @type != TYPE_NULL
+			converted_content = TaskPaperExportPluginManager.process_text(self, @content, TaskPaperExportPlugin::OUTPUT_TYPE_JSON)
+			converted_content = json_escape(converted_content)
+			output += "{"
+			output += "\"content\": \"#{converted_content}\",#{TaskPaperItem.linebreak}"
+			output += "\"title\": \"#{json_escape(title)}\",#{TaskPaperItem.linebreak}"
+			output += "\"type\": \"#{@type}\",#{TaskPaperItem.linebreak}"
+			output += "\"type_name\": \"#{type_name}\",#{TaskPaperItem.linebreak}"
+			
+			output += "\"id_attr\": \"#{json_escape(id_attr)}\",#{TaskPaperItem.linebreak}"
+			output += "\"md5_hash\": \"#{json_escape(md5_hash)}\",#{TaskPaperItem.linebreak}"
+			
+			output += "\"level\": #{level},#{TaskPaperItem.linebreak}"
+			output += "\"effective_level\": #{effective_level},#{TaskPaperItem.linebreak}"
+			output += "\"extra_indent\": #{@extra_indent},#{TaskPaperItem.linebreak}"
+			
+			output += "\"done\": #{done?},#{TaskPaperItem.linebreak}"
+			
+			output += "\"tags\": ["
+			@tags.each_with_index do |x, index|
+				output += "{"
+				output += "\"type\": \"#{x[:type]}\","
+				output += "\"name\": \"#{json_escape(x[:name])}\","
+				output += "\"value\": \"#{json_escape(x[:value])}\","
+				output += "\"begin\": \"#{x[:range].begin}\","
+				output += "\"end\": \"#{x[:range].end}\""
+				output += "}"
+				if index < @tags.length - 1
+					output += ", "
+				end
+			end
+			output += "],#{TaskPaperItem.linebreak}"
+			
+			output += "\"links\": ["
+			@links.each_with_index do |x, index|
+				output += "{"
+				output += "\"type\": \"#{x[:type]}\","
+				output += "\"text\": \"#{json_escape(x[:text])}\","
+				output += "\"url\": \"#{json_escape(x[:url])}\","
+				output += "\"begin\": \"#{x[:range].begin}\","
+				output += "\"end\": \"#{x[:range].end}\""
+				output += "}"
+				if index < @links.length - 1
+					output += ", "
+				end
+			end
+			output += "],#{TaskPaperItem.linebreak}"
+			
+			output += "\"children\": "
+		end
+		output += "["
+		@children.each_with_index do |child, index|
+			output += child.to_json
+			if index < @children.length - 1
+				output += ", "
+			end
+		end
+		output += "]"
+		if @type != TYPE_NULL
+			output += "}"
+		end
+		return output
+	end
+	
+	def json_escape(str)
+		result = str.gsub(/(?<!\\)\//i, "\\\\/").gsub(/\\/i, "\\\\\\").gsub(/(?<!\\)\"/i, "\\\"")
+		return result
+	end
+	private :json_escape
 end

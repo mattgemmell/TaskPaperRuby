@@ -216,6 +216,10 @@ class TaskPaperDocument
 		return (@root_item) ? @root_item.to_text : ""
 	end
 	
+	def to_json
+		return (@root_item) ? @root_item.to_json : ""
+	end
+	
 	def to_tags
 		return (@root_item) ? @root_item.to_tags : ""
 	end
