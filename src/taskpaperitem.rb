@@ -642,8 +642,8 @@ class TaskPaperItem
 				output += "\"type\": \"#{x[:type]}\","
 				output += "\"name\": \"#{json_escape(x[:name])}\","
 				output += "\"value\": \"#{json_escape(x[:value])}\","
-				output += "\"begin\": \"#{x[:range].begin}\","
-				output += "\"end\": \"#{x[:range].end}\""
+				output += "\"begin\": #{x[:range].begin},"
+				output += "\"end\": #{x[:range].end}"
 				output += "}"
 				if index < @tags.length - 1
 					output += ", "
@@ -657,8 +657,8 @@ class TaskPaperItem
 				output += "\"type\": \"#{x[:type]}\","
 				output += "\"text\": \"#{json_escape(x[:text])}\","
 				output += "\"url\": \"#{json_escape(x[:url])}\","
-				output += "\"begin\": \"#{x[:range].begin}\","
-				output += "\"end\": \"#{x[:range].end}\""
+				output += "\"begin\": #{x[:range].begin},"
+				output += "\"end\": #{x[:range].end}"
 				output += "}"
 				if index < @links.length - 1
 					output += ", "
@@ -683,7 +683,7 @@ class TaskPaperItem
 	end
 	
 	def json_escape(str)
-		result = str.gsub(/(?<!\\)\//i, "\\\\/").gsub(/\\/i, "\\\\\\").gsub(/(?<!\\)\"/i, "\\\"")
+		result = str.gsub(/\\/i, "\\\\\\").gsub(/(?<!\\)\"/i, "\\\"")
 		return result
 	end
 	private :json_escape
