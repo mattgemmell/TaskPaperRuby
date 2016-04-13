@@ -16,7 +16,7 @@ li[data-type="project"] {
   font-weight: bold;
   line-height: 1.5;
 }
-li[data-done] > span[display] {
+li[data-done] > span[content] {
   text-decoration: line-through;
 }
 span[link] {

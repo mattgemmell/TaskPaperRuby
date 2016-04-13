@@ -19,9 +19,9 @@ Priorities:
 	- This isn't very important at all @priority(low)
 	- Nor is this @priority(5)
 [Searches]:
-	- Next Actions @search(project *//((not @done\) and (not @search\)\)[0])
-	- Due Today @search(not @done and (@today or @due <=[d] today +1d or @due <=[d] today\))
-	- Due within 7 days @search(not @done and (@today or @due <=[d] today +7d or @due <=[d] today\))
-	- Priority: High @search(not @done and (@priority = [i]high or @priority = 1\))
+	- Next Actions @search(project *//\(\(not @done\) and \(not @search\)\)[0])
+	- Due Today @search(not @done and \(@today or @due <=[d] today +1d or @due <=[d] today\))
+	- Due within 7 days @search(not @done and \(@today or @due <=[d] today +7d or @due <=[d] today\))
+	- Priority: High @search(not @done and \(@priority = [i]high or @priority = 1\))
 	- Flagged @search(not @done and @flag)
 	- Context: Work @search(not @done and @context = [i]work)

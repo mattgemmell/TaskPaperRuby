@@ -91,14 +91,14 @@ ul, ul.extra-indent {
 	display: none;
 }
 
-[tag=data-search][tagname] + [display]:after {
+[tag=data-search][tagname] + [content]:after {
 	content: "…";
 }
 
-[tag=data-search][tagname]:hover + [display] + [tagvalue] {
+[tag=data-search][tagname]:hover + [content] + [tagvalue] {
 	display: inline;
 }
 
-[tag=data-search][tagname]:hover + [display]:after {
+[tag=data-search][tagname]:hover + [content]:after {
 	content: "";
 }
