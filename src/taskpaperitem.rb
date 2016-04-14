@@ -510,6 +510,38 @@ class TaskPaperItem
 		@content[range] = ""
 	end
 	private :strip_tag
+	
+	def total_tag_values(tag_name, always_update = false)
+		# Returns recursive total of numerical values of the given tag.
+		# If tag is present, its value will be updated according to recursive total of its descendants. If always_update is true, tag value will be set even if it wasn't present.
+		# Leaf elements without the relevant tag are counted as zero.
+		# Tag values on branch elements are ignored, and overwritten with their descendants' recursive total.
+		total = 0
+		if tag_name and tag_name != ""
+			has_tag = has_tag?(tag_name)
+			if @type != TYPE_NULL and @children.length == 0
+				if has_tag
+					val_match = /\d+/i.match(tag_value(tag_name))
+					if val_match
+						val = val_match[0].to_i
+						total += val
+					end
+				end
+			end
+			
+			@children.each do |child|
+				total += child.total_tag_values(tag_name, always_update)
+			end
+			
+			if @type != TYPE_NULL
+				if has_tag or always_update
+					set_tag(tag_name, total)
+				end
+			end
+		end
+		
+		return total
+	end
 
 	def to_structure(include_titles = true)
 		# Indented text output with items labelled by type, and project/task decoration stripped

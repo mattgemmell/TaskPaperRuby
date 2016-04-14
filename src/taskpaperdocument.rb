@@ -180,6 +180,10 @@ class TaskPaperDocument
 		return (@root_item) ? @root_item.all_tags(with_values, prefixed).uniq.sort : nil
 	end
 	
+	def total_tag_values(tag_name, always_update = false)
+		return (@root_item) ? @root_item.total_tag_values(tag_name, always_update) : nil
+	end
+	
 	def add_child(child)
 		return @root_item.add_child(child)
 	end
