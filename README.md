@@ -93,7 +93,7 @@ Matt Gemmell (that's me).
 
 The [MIT license](http://choosealicense.com/licenses/mit/).
 
-If you need a difference license, feel free to ask. I'm flexible about this.
+If you need a different license, feel free to ask. I'm flexible about this.
 
 
 ## Why did you make it?
